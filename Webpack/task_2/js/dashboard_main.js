@@ -1,24 +1,19 @@
 import $ from 'jquery';
-import debounce from 'lodash/debounce';
+import _ from 'lodash';
+import '../css/main.css';
 
-// Count number of times the button element been clicked
-let ClickCount = 0;
+$('body').prepend('<div id="logo"></div>');
 
-export function updateCounter() {
-  ClickCount += 1;
-  $('#count').text(`${ClickCount} clicks on the button`);
+$('body').append('<p>Holberton Dashboard</p>');
+$('body').append('<p>Dashboard data for the students</p>');
+$('body').append('<button id="start-btn">Click here to get started</button>');
+$('body').append('<p id="count"></p>');
+$('body').append('<p>Copyright - Holberton School</p>');
+
+let count = 0;
+function updateCounter() {
+  count++;
+  $('#counter').text(`${count} clicks on the button`);
 }
 
-$(document).ready( () => {
-  const elements = [
-    $('<p>').text('Holberton Dashboard'),
-    $('<p>').text('Dashboard data for the students'),
-    $('<button>').text('Click here to get started'),
-    $('<p id="count">'),
-    $('<p>').text('Copyright - Holberton School'),
-  ];
-
-  $('body').append(...elements);
-
-  $('#start-btn').on('click', debounce(updateCounter, 500));
-});
+$('#button').on('click', _.debounce(updateCounter, 500));
