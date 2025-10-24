@@ -3,6 +3,7 @@
     height: 200px;
     background: url('../assets/holberton-logo.jpg');
     background-size: 200px 200px;
+    background-position: center;
 }
 
 button {
