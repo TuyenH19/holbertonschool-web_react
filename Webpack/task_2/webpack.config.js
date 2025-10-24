@@ -18,18 +18,8 @@ module.exports = {
         test: /\.(png|jpe?g|gif)$/i,
         type: 'asset/resource',
         generator: {
-          filename: 'images/[name][ext]',
-        },
-        use: [
-          {
-            loader: 'image-webpack-loader',
-            options: {
-              mozjpeg: { progressive: true },
-              optipng: { enabled: true },
-              pngquant: { quality: [0.65, 0.90], speed: 4 },
-            },
-          },
-        ],
+          filename: 'assets/[name][ext]',
+        }
       },
     ],
   },
