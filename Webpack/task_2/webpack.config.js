@@ -1,3 +1,4 @@
+
 const path = require('path');
 
 module.exports = {
@@ -5,22 +6,31 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, 'public'),
     filename: 'bundle.js',
-    clean: false
   },
   mode: 'production',
   module: {
     rules: [
       {
-        test: /\.css$/,
-        use: ['style-loader', 'css-loader']
+        test: /\.css$/i,
+        use: ['style-loader', 'css-loader'],
       },
       {
         test: /\.(png|jpe?g|gif)$/i,
+        type: 'asset/resource',
+        generator: {
+          filename: 'images/[name][ext]',
+        },
         use: [
-          'file-loader',
-          'image-webpack-loader'
-        ]
-      }
-    ]
-  }
+          {
+            loader: 'image-webpack-loader',
+            options: {
+              mozjpeg: { progressive: true },
+              optipng: { enabled: true },
+              pngquant: { quality: [0.65, 0.90], speed: 4 },
+            },
+          },
+        ],
+      },
+    ],
+  },
 };
