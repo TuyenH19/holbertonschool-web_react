@@ -156,3 +156,26 @@ Repo:
 GitHub repository: holbertonschool-web_react
 Directory: Webpack
 File: task_3/modules/body/body.css, task_3/modules/body/body.js, task_3/modules/footer/footer.css, task_3/modules/footer/footer.js, task_3/modules/header/header.css, task_3/modules/header/header.js, task_3/package.json, task_3/webpack.config.js
+
+
+* create file package.json: npm init -y
+* install webpack/ jQuery / Lodash using npm: npm install webpack/...
+* when webpack needs loaders to process CSS files: npm install --save-dev style-loader css-loader
+
+when npm cannot rename directories during installation. Let's fix this with the following steps:
+
+First, remove the node_modules directory and package-lock.json:
+```
+rm -rf node_modules
+rm package-lock.json
+```
+
+Clear the npm cache:
+```
+npm cache clean --force
+```
+
+Reinstall dependencies:
+```
+npm install
+```
