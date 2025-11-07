@@ -40,14 +40,16 @@ describe('App', () => {
     render(<App />);
     const emailInput = screen.getByLabelText(/email:/i);
     const passwordInput = screen.getByLabelText(/password:/i);
+
     expect(emailInput).toBeInTheDocument();
     expect(passwordInput).toBeInTheDocument();
   });
 
-  test('App component renders 2 label elements with the text Email and Password)', () => {
+  test('renders 2 label elements with text Email and Password', () => {
     render(<App />);
-    const emailLabel = screen.getByLabelText(/email:/i);
-    const passwordLabel = screen.getByLabelText(/password:/i);
+    const emailLabel = screen.getByText(/email/i);
+    const passwordLabel = screen.getByText(/password/i);
+
     expect(emailLabel).toBeInTheDocument();
     expect(passwordLabel).toBeInTheDocument();
   });
@@ -57,4 +59,5 @@ describe('App', () => {
     const okButton = screen.getByRole('button', { name: /ok/i });
     expect(okButton).toBeInTheDocument();
   });
+
 });
