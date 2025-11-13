@@ -1,27 +1,43 @@
 import React from 'react';
-import closeIcon from './assets/close-button.png';
-import { getLatestNotification } from './utils.js';
-import './Notifications.css';
+import { render, screen, fireEvent } from '@testing-library/react';
+import '@testing-library/jest-dom';
+import Notifications from './Notifications';
 
-function Notifications() {
-  return (
-    <div className="notification-items">
-      <p>Here is the list of notifications</p>
-      <ul>
-        <li data-priority="default">New course available</li>
-        <li data-priority="urgent">New resume available</li>
-        <li dangerouslySetInnerHTML={{ __html: getLatestNotification() }}></li>
-      </ul>
+const originalConsoleLog = console.log;
 
-      <button
-        aria-label="Close"
-        style={{ float: 'right' }}
-        onClick={() => console.log('Close button has been clicked')}
-      >
-        <img src={closeIcon} alt="close" style={{ height: 20, width: 20 }} />
-      </button>
-    </div>
-  );
-}
+describe('Notifications Component', () => {
+  beforeEach(() => {
+    console.log = jest.fn();
+  });
 
-export default Notifications;
+  afterEach(() => {
+    console.log = originalConsoleLog;
+  });
+
+  test('renders the notifications title', () => {
+    render(<Notifications />);
+    const titleElement = screen.getByText(/here is the list of notifications/i);
+    expect(titleElement).toBeInTheDocument();
+  });
+
+  test('renders the close button', () => {
+    render(<Notifications />);
+    const closeButton = screen.getByRole('button', { name: /close/i });
+    expect(closeButton).toBeInTheDocument();
+  });
+
+  test('renders exactly 3 notification items', () => {
+    render(<Notifications />);
+    const notificationItems = screen.getAllByRole('listitem');
+    expect(notificationItems).toHaveLength(3);
+  });
+
+  test('logs to console when close button is clicked', () => {
+    const spy = jest.spyOn(console, 'log').mockImplementation(() => {});
+    render(<Notifications />);
+    const button = screen.getByRole('button', { name: /close/i });
+    fireEvent.click(button);
+    expect(spy).toHaveBeenCalledWith('Close button has been clicked');
+    spy.mockRestore();
+  });
+});
