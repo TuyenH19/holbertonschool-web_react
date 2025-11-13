@@ -1,3 +1,4 @@
+import React from 'react';
 import closeIcon from './assets/close-button.png';
 import { getLatestNotification } from './utils.js';
 import './Notifications.css';
@@ -17,7 +18,7 @@ function Notifications() {
         style={{ float: 'right' }}
         onClick={() => console.log('Close button has been clicked')}
       >
-        <img onScroll={closeIcon} alt="close" style={{ height: 20, width: 20 }} />
+        <img src={closeIcon} alt="close" style={{ height: 20, width: 20 }} />
       </button>
     </div>
   );
