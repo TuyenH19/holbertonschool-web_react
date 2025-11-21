@@ -4,7 +4,7 @@ import NotificationItem from './NotificationItem';
 
 function Notifications({ notifications = [], displayDrawer = false }) {
   return (
-    <>
+    <div className="Notifications">
       <div className="notification-title">
         <p>Your notifications</p>
       </div>
@@ -36,7 +36,7 @@ function Notifications({ notifications = [], displayDrawer = false }) {
           </button>
         </div>
       )}
-    </>
+    </div>
   );
 }
 
