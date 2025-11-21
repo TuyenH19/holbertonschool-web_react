@@ -320,3 +320,14 @@ Repo:
 GitHub repository: holbertonschool-web_react
 Directory: react_props
 File: task_5/dashboard, task_5/dashboard/src/Notifications/Notifications.jsx, task_5/dashboard/src/Notifications/Notifications.spec.js
+
+
+
+expect(value).toBe(10)                    // Strict equality (===)
+expect(value).toEqual({ a: 1 })           // Deep equality for objects
+expect(value).toHaveLength(5)             // Array/string length
+expect(value).toBeInTheDocument()         // Element exists in DOM
+expect(value).toHaveAttribute('id', 'x')  // Element has attribute
+expect(value).toHaveTextContent('text')   // Element contains text
+expect(value).toBeTruthy()                // Value is truthy
+expect(value).toBeNull()                  // Value is null
