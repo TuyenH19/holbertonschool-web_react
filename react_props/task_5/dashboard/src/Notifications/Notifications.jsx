@@ -4,12 +4,12 @@ import NotificationItem from './NotificationItem';
 
 function Notifications({ notifications = [], displayDrawer = false }) {
   return (
-    <div className="Notifications">
-      <div className="notification-title">
+    <>
+      <div className="menuItem">
         <p>Your notifications</p>
       </div>
       {displayDrawer && (
-        <div className="notification-items">
+        <div className="Notifications">
           {notifications.length === 0 ? (
             <p>No new notification for now</p>
           ) : (
@@ -36,7 +36,7 @@ function Notifications({ notifications = [], displayDrawer = false }) {
           </button>
         </div>
       )}
-    </div>
+    </>
   );
 }
 
