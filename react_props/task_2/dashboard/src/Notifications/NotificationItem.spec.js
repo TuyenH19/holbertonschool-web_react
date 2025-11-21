@@ -9,7 +9,7 @@ describe('NotificationItem Component', () => {
     const listItem = screen.getByRole('listitem');
     
     expect(listItem).toBeInTheDocument();
-    expect(listItem).toHaveStyle({ color: 'blue' });
+    expect(listItem).toHaveStyle({ color: 'rgb(0, 0, 255)' });
     expect(listItem).toHaveAttribute('data-notification-type', 'default');
   });
 
@@ -18,7 +18,7 @@ describe('NotificationItem Component', () => {
     const listItem = screen.getByRole('listitem');
 
     expect(listItem).toBeInTheDocument();
-    expect(listItem).toHaveStyle({ color: 'red' });
+    expect(listItem).toHaveStyle({ color: 'rgb(255, 0, 0)' });
     expect(listItem).toHaveAttribute('data-notification-type', 'urgent');
   });
 });
