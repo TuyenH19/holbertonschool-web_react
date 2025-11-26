@@ -1,14 +1,14 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import closeIcon from '../assets/close-button.png';
 import './Notifications.css';
 import NotificationItem from './NotificationItem';
 
-class Notifications extends PureComponent {
+class Notifications extends Component {
   static defaultProps = {
     notifications: [],
     displayDrawer: false
   };
-  // It only updates when the length of the notification list prop changes
+
   shouldComponentUpdate(nextProps, nextState) {
     return nextProps.notifications.length !== this.props.notifications.length;
   }
