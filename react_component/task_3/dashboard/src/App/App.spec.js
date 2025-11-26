@@ -115,4 +115,15 @@ describe('App', () => {
     
     alertMock.mockRestore();
   });
+
+  test('Check title "News from school" and paragraph element with text "Holberton School News goes here" are displayed by default', () => {
+    render(<App />);
+    
+    const newsTitle = screen.getByRole('heading', { name: /news from the school/i });
+    const newsContent = screen.getByText(/holberton school news goes here/i);
+    
+    expect(newsTitle).toBeInTheDocument();
+    expect(newsContent).toBeInTheDocument();
+  });
+  
 });

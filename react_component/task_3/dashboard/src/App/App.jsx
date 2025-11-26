@@ -6,6 +6,8 @@ import Header from '../Header/Header';
 import Footer from '../Footer/Footer';
 import Login from '../Login/Login';
 import CourseList from '../CourseList/CourseList';
+import BodySection from '../BodySection/BodySection';
+import BodySectionWithMarginBottom from '../BodySection/BodySectionWithMarginBottom';
 
 class App extends Component {
   static defaultProps = {
@@ -49,7 +51,16 @@ class App extends Component {
         </div>
         <div className="App">
           <Header />
-          {isLoggedIn ? <CourseList courses={coursesList} /> : <Login />}
+          {isLoggedIn ? (
+            <BodySectionWithMarginBottom title="Course list">
+              <CourseList courses={coursesList} />
+            </BodySectionWithMarginBottom>
+          ) : (
+            <Login />
+          )}
+          <BodySection title="News from the School">
+            <p>Holberton School News goes here</p>
+          </BodySection>
           <Footer />
         </div>
       </>
