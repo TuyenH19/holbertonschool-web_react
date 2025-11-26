@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 
-class NotificationItem extends Component {
+class NotificationItem extends PureComponent {
   render() {
     const { type, html, value, id, markAsRead } = this.props;
     const color = type === 'urgent' ? 'red' : 'blue';
