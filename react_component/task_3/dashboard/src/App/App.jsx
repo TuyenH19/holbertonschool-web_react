@@ -56,7 +56,9 @@ class App extends Component {
               <CourseList courses={coursesList} />
             </BodySectionWithMarginBottom>
           ) : (
-            <Login />
+            <BodySection title="Log in to continue">
+              <Login />
+            </BodySection>
           )}
           <BodySection title="News from the School">
             <p>Holberton School News goes here</p>
