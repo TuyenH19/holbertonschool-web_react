@@ -18,7 +18,7 @@
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "tailwindcss": "4.1.17",
-    "@tailwindcss/postcss": "4.1.17"
+    "@tailwindcss/vite": "4.1.17"
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.28.5",
