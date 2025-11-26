@@ -12,10 +12,13 @@
     "test:watch": "jest --watch"
   },
   "dependencies": {
+    "@fontsource/roboto": "^5.2.9",
     "@testing-library/user-event": "^14.6.1",
     "identity-obj-proxy": "^3.0.0",
     "react": "^19.1.1",
-    "react-dom": "^19.1.1"
+    "react-dom": "^19.1.1",
+    "tailwindcss": "^4.1.17",
+    "@playwright/test": "^1.49.0"
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.28.5",
