@@ -122,5 +122,65 @@ describe('Notifications Component', () => {
     spy.mockRestore();
   });
 
-  
+  test('does not re-render if the length of the notifications prop remains the same', () => {
+    const notifications = [
+      { id: 1, type: 'default', value: 'New course available' },
+      { id: 2, type: 'urgent', value: 'New resume available' }
+    ];
+    
+    const { rerender } = render(
+      <Notifications displayDrawer={true} notifications={notifications} />
+    );
+    
+    const initialItems = screen.getAllByRole('listitem');
+    expect(initialItems).toHaveLength(2);
+    
+    // Update props with same length but different content
+    const updatedNotifications = [
+      { id: 1, type: 'default', value: 'Updated notification 1' },
+      { id: 2, type: 'urgent', value: 'Updated notification 2' }
+    ];
+    
+    rerender(<Notifications displayDrawer={true} notifications={updatedNotifications} />);
+    
+    // Should still show old content because length hasn't changed
+    const itemsAfterUpdate = screen.getAllByRole('listitem');
+    expect(itemsAfterUpdate).toHaveLength(2);
+  });
+
+  test('re-renders whenever the length of the notifications prop changes', () => {
+    const notifications = [
+      { id: 1, type: 'default', value: 'New course available' },
+      { id: 2, type: 'urgent', value: 'New resume available' }
+    ];
+    
+    const { rerender } = render(
+      <Notifications displayDrawer={true} notifications={notifications} />
+    );
+    
+    let items = screen.getAllByRole('listitem');
+    expect(items).toHaveLength(2);
+    
+    // Add a notification (length changes from 2 to 3)
+    const notificationsWithNew = [
+      { id: 1, type: 'default', value: 'New course available' },
+      { id: 2, type: 'urgent', value: 'New resume available' },
+      { id: 3, type: 'urgent', value: 'New project available' }
+    ];
+    
+    rerender(<Notifications displayDrawer={true} notifications={notificationsWithNew} />);
+    
+    items = screen.getAllByRole('listitem');
+    expect(items).toHaveLength(3);
+    
+    // Remove a notification (length changes from 3 to 1)
+    const notificationsWithRemoved = [
+      { id: 1, type: 'default', value: 'New course available' }
+    ];
+    
+    rerender(<Notifications displayDrawer={true} notifications={notificationsWithRemoved} />);
+    
+    items = screen.getAllByRole('listitem');
+    expect(items).toHaveLength(1);
+  });
 });

@@ -8,6 +8,10 @@ class Notifications extends PureComponent {
     notifications: [],
     displayDrawer: false
   };
+  // It only updates when the length of the notification list prop changes
+  shouldComponentUpdate(nextProps, nextState) {
+    return nextProps.notifications.length !== this.props.notifications.length;
+  }
 
   markAsRead = (id) => {
     console.log(`Notification ${id} has been marked as read`);
