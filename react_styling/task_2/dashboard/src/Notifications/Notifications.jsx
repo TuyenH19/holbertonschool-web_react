@@ -27,33 +27,29 @@ class Notifications extends Component {
         </div>
         {displayDrawer && (
           <div className="Notifications border-dashed border-2 border-[var(--main-color)] w-auto min-w-96 absolute top-10 right-3 p-4 bg-white">
-            {notifications.length === 0 ? (
-              <p>No new notification for now</p>
-            ) : (
-              <>
-                <div className="flex justify-between items-center">
-                  <p>Here is the list of notifications</p>
-                  <button
-                    aria-label="Close"
-                    onClick={() => console.log('Close button has been clicked')}
-                    className="border-0 bg-transparent cursor-pointer"
-                  >
-                    <img src={closeIcon} alt="close" style={{ height: 20, width: 20 }} />
-                  </button>
-                </div>
-                <ul className="list-none pl-0">
-                  {notifications.map((notification) => (
-                    <NotificationItem
-                      key={notification.id}
-                      id={notification.id}
-                      type={notification.type}
-                      value={notification.value}
-                      html={notification.html}
-                      markAsRead={this.markAsRead}
-                    />
-                  ))}
-                </ul>
-              </>
+            <div className="flex justify-between items-center mb-2">
+              <p className="m-0">{notifications.length === 0 ? 'No new notification for now' : 'Here is the list of notifications'}</p>
+              <button
+                aria-label="Close"
+                onClick={() => console.log('Close button has been clicked')}
+                className="border-0 bg-transparent cursor-pointer"
+              >
+                <img src={closeIcon} alt="close" style={{ height: 20, width: 20 }} />
+              </button>
+            </div>
+            {notifications.length > 0 && (
+              <ul className="list-none pl-0">
+                {notifications.map((notification) => (
+                  <NotificationItem
+                    key={notification.id}
+                    id={notification.id}
+                    type={notification.type}
+                    value={notification.value}
+                    html={notification.html}
+                    markAsRead={this.markAsRead}
+                  />
+                ))}
+              </ul>
             )}
           </div>
         )}
