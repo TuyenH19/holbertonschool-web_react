@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import closeIcon from '../assets/close-button.png';
-import './Notifications.css';
 import NotificationItem from './NotificationItem';
 
 class Notifications extends Component {
