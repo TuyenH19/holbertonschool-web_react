@@ -6,7 +6,7 @@ function Login() {
       <p className="text-lg mb-5">Login to access the full dashboard</p>
       <form className="flex flex-wrap items-center gap-4">
         <div className="inline-flex items-center gap-2">
-          <label htmlFor="email" className="font-normal">Email</label>
+          <label htmlFor="email" className="font-normal">Email:</label>
           <input 
             type="email" 
             id="email" 
@@ -15,7 +15,7 @@ function Login() {
           />
         </div>
         <div className="inline-flex items-center gap-2">
-          <label htmlFor="password" className="font-normal">Password</label>
+          <label htmlFor="password" className="font-normal">Password:</label>
           <input 
             type="password" 
             id="password" 
