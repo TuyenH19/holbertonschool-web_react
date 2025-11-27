@@ -30,7 +30,7 @@ function CourseListRow({ isHeader = false, textFirstCell = '', textSecondCell = 
     }
   } else {
     return (
-      <tr style={rowStyle}>
+      <tr>
         <td className="pl-2" style={cellStyle}>{textFirstCell}</td>
         <td className="pl-2" style={cellStyle}>{textSecondCell}</td>
       </tr>
