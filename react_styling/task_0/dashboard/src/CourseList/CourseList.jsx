@@ -1,4 +1,5 @@
 import CourseListRow from './CourseListRow';
+import './CourseList.css';
 
 function CourseList({ courses = [] }) {
   if (courses.length === 0) {
