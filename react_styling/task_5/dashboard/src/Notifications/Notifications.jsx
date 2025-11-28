@@ -18,11 +18,11 @@ class Notifications extends Component {
 
   render() {
     const { notifications, displayDrawer } = this.props;
-    const shouldBounce = notifications.length > 0 && !displayDrawer;
+    const shouldBounce = notifications.length > 0 && displayDrawer === false;
 
     return (
       <>
-        <div className={`menuItem absolute top-0 right-0 p-4 max-[912px]:hidden ${shouldBounce ? 'animate-bounce' : ''}`}>
+        <div className={`menuItem absolute top-0 right-0 p-4 max-[912px]:hidden${shouldBounce ? ' animate-bounce' : ''}`}>
           <p>Your notifications</p>
         </div>
         {displayDrawer && (
