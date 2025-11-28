@@ -1,7 +1,7 @@
 
 function Login() {
   return (
-    <div className="py-10 px-5 min-h-[60vh]">
+    <div>
       <p className="text-lg mb-5">Login to access the full dashboard</p>
       <form className="flex flex-wrap items-center gap-4">
         <div className="inline-flex items-center gap-2">

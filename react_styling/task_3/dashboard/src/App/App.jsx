@@ -60,7 +60,7 @@ class App extends Component {
             </BodySectionWithMarginBottom>
           ) : (
             <div className="mb-10 px-5">
-              <h2 className="text-xl font-bold border-b-[3px] border-[var(--main-color)]">Log in to continue</h2>
+              <h2 className="text-xl font-bold pb-2.5 mb-2.5 border-b-[3px] border-[var(--main-color)]">Log in to continue</h2>
               <LoginWithLogging />
             </div>
           )}
