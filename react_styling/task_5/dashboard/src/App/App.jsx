@@ -50,7 +50,7 @@ class App extends Component {
     return (
       <>
         <div className="root-notifications">
-          <Notifications notifications={notificationsList} displayDrawer={true} />
+          <Notifications notifications={notificationsList} displayDrawer={false} />
         </div>
         <div className="App h-screen max-w-full flex flex-col max-[912px]:h-auto">
           <Header />
