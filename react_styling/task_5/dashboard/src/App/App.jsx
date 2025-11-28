@@ -50,7 +50,7 @@ class App extends Component {
     return (
       <>
         <div className="root-notifications">
-          <Notifications notifications={notificationsList} displayDrawer={false} />
+          <Notifications notifications={notificationsList} displayDrawer={true} />
         </div>
         <div className="App h-screen max-w-full flex flex-col max-[912px]:h-auto">
           <Header />
@@ -66,7 +66,7 @@ class App extends Component {
               </div>
             )}
             <BodySection title="News from the School">
-              <p>ipsum Lorem ipsum dolor sit amet consectetur, adipisicing elit. Similique, asperiores architecto blanditiis fuga doloribus sit illum aliquid ea distinctio minus accusantium, impedit quo voluptatibus ut magni dicta. Recusandae, quia dicta?</p>
+              <p>Holberton School News goes here</p>
             </BodySection>
           </div>
           <Footer />
