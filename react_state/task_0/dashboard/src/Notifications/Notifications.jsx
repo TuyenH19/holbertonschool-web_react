@@ -10,8 +10,10 @@ class Notifications extends Component {
     handleHideDrawer: () => {}
   };
 
+  // Add checking if displayDrawer changed
   shouldComponentUpdate(nextProps, nextState) {
-    return nextProps.notifications.length !== this.props.notifications.length;
+    return nextProps.notifications.length !== this.props.notifications.length ||
+           nextProps.displayDrawer !== this.props.displayDrawer;
   }
 
   markAsRead = (id) => {
