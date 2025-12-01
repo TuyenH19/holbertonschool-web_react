@@ -183,4 +183,56 @@ describe('Notifications Component', () => {
     items = screen.getAllByRole('listitem');
     expect(items).toHaveLength(1);
   });
+
+  test('re-renders when displayDrawer when clicking on menu item', () => {
+    const notifications = [];
+    
+    const { rerender } = render(
+      <Notifications displayDrawer={false} notifications={notifications} />
+    );
+  });
+
+  test('clicking on the menu item calls handleDisplayDrawer', () => {
+    const handleDisplayDrawer = jest.fn();
+    const handleHideDrawer = jest.fn();
+    const notifications = [
+      { id: 1, type: 'default', value: 'New course available' }
+    ];
+    
+    render(
+      <Notifications 
+        displayDrawer={false} 
+        notifications={notifications}
+        handleDisplayDrawer={handleDisplayDrawer}
+        handleHideDrawer={handleHideDrawer}
+      />
+    );
+    
+    const menuItem = screen.getByText(/your notifications/i);
+    fireEvent.click(menuItem);
+    
+    expect(handleDisplayDrawer).toHaveBeenCalled();
+  });
+
+  test('clicking on the close button calls handleHideDrawer', () => {
+    const handleDisplayDrawer = jest.fn();
+    const handleHideDrawer = jest.fn();
+    const notifications = [
+      { id: 1, type: 'default', value: 'New course available' }
+    ];
+    
+    render(
+      <Notifications 
+        displayDrawer={true} 
+        notifications={notifications}
+        handleDisplayDrawer={handleDisplayDrawer}
+        handleHideDrawer={handleHideDrawer}
+      />
+    );
+    
+    const closeButton = screen.getByRole('button', { name: /close/i });
+    fireEvent.click(closeButton);
+    
+    expect(handleHideDrawer).toHaveBeenCalled();
+  });
 });
