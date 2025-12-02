@@ -1,0 +1,17 @@
+@import 'tailwindcss';
+@import '@fontsource/roboto';
+
+@theme {
+  --font-family: Roboto, sans-serif;
+  --color-table-header: #deb5b5;
+  --color-table-rows: #CDCDCD;
+  --main-color: #e1003c;
+  --default-notification-item: blue;
+  --urgent-notification-item: red;
+}
+
+@layer base {
+  * {
+    font-family: var(--font-family);
+  }
+}
