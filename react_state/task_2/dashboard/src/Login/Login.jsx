@@ -1,15 +1,25 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 class Login extends Component {
+  static propTypes = {
+    logIn: PropTypes.func,
+    email: PropTypes.string,
+    password: PropTypes.string
+  };
+
   static defaultProps = {
-    logIn: () => {}
+    logIn: () => {},
+    email: '',
+    password: ''
   };
 
   constructor(props) {
     super(props);
     this.state = {
-      email: '',
-      password: '',
+      // Initializes email and password from props if provided
+      email: props.email || '',
+      password: props.password || '',
       enableSubmit: false
     };
   }
