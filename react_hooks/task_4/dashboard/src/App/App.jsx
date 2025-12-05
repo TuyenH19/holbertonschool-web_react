@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import { getCurrentYear, getFooterCopy, getLatestNotification } from '../utils/utils';
 import Notifications from '../Notifications/Notifications';
 import Header from '../Header/Header';
@@ -14,7 +14,7 @@ const LoginWithLogging = WithLogging(Login);
 const CourseListWithLogging = WithLogging(CourseList);
 
 function App() {
-  const [displayDrawer, setDisplayDrawer] = useState(false);
+  const [displayDrawer, setDisplayDrawer] = useState(true);
   const [user, setUser] = useState({
     email: '',
     password: '',
@@ -62,20 +62,20 @@ function App() {
     setDisplayDrawer(false);
   }, []);
 
-  useEffect(() => {
-    const handleKeyDown = (event) => {
-      if (event.ctrlKey && event.key === 'h') {
-        alert('Logging you out');
-        logOut();
-      }
-    };
+  // useEffect(() => {
+  //   const handleKeyDown = (event) => {
+  //     if (event.ctrlKey && event.key === 'h') {
+  //       alert('Logging you out');
+  //       logOut();
+  //     }
+  //   };
 
-    document.addEventListener('keydown', handleKeyDown);
+  //   document.addEventListener('keydown', handleKeyDown);
     
-    return () => {
-      document.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [logOut]); // Re-run when logOut changes
+  //   return () => {
+  //     document.removeEventListener('keydown', handleKeyDown);
+  //   };
+  // }, [logOut]); // Re-run when logOut changes
 
   return (
     <AppContext.Provider value={{ user: user, logOut: logOut }}>
