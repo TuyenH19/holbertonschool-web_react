@@ -1,29 +1,54 @@
-import React, { memo } from 'react';
+import { memo } from 'react';
+import PropTypes from 'prop-types';
 
-const NotificationItem = memo(function NotificationItem({ type, html, value, id, markAsRead }) {
-  const colorClass = type === 'urgent' ? 'text-[var(--urgent-notification-item)]' : 'text-[var(--default-notification-item)]';
+function NotificationItem({ 
+  id = 0, 
+  type = 'default', 
+  value = '', 
+  html = undefined, 
+  markAsRead = () => {} 
+}) {
+  const baseClasses = "pl-1 max-[912px]:text-[20px] max-[912px]:w-full max-[912px]:border-b max-[912px]:border-black max-[912px]:p-[10px_8px]";
+  
+  const colorClass = type === 'default' 
+    ? "text-[color:var(--default-notification-item)]" 
+    : "text-[color:var(--urgent-notification-item)]";
 
-  if (html) {
+  const handleClick = () => {
+    markAsRead(id);
+  };
+
+  if (html !== undefined) {
     return (
-      <li 
+      <li
+        className={`${colorClass} ${baseClasses}`}
         data-notification-type={type}
-        className={`${colorClass} flex items-start gap-2 mb-2 before:content-['■'] before:text-base max-[912px]:p-3 max-[912px]:border-b max-[912px]:border-black max-[912px]:text-xl`}
         dangerouslySetInnerHTML={html}
-        onClick={() => markAsRead(id)}
+        onClick={handleClick}
       />
     );
   }
 
   return (
-    <li 
+    <li
+      className={`${colorClass} ${baseClasses}`}
       data-notification-type={type}
-      className={`${colorClass} flex items-start gap-2 mb-2 max-[912px]:p-3 max-[912px]:border-b max-[912px]:border-black max-[912px]:text-xl`}
-      onClick={() => markAsRead(id)}
+      onClick={handleClick}
     >
-      <span className="text-base max-[912px]:hidden">■</span>
-      <span>{value}</span>
+      {value}
     </li>
   );
-});
+}
 
-export default NotificationItem;
+NotificationItem.propTypes = {
+  id: PropTypes.number,
+  type: PropTypes.string,
+  html: PropTypes.shape({
+    __html: PropTypes.string
+  }),
+  value: PropTypes.string,
+  markAsRead: PropTypes.func
+};
+
+
+export default memo(NotificationItem);

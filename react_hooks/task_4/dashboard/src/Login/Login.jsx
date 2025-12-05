@@ -1,78 +1,88 @@
-import React, { useState } from 'react' ;
+import { useState } from 'react';
 import PropTypes from 'prop-types';
+import WithLogging from '../HOC/WithLogging';
 
 function Login({ logIn = () => {}, email: initialEmail = '', password: initialPassword = '' }) {
-  const [email, setEmail] = useState(initialEmail);
-  const [password, setPassword] = useState(initialPassword);
   const [enableSubmit, setEnableSubmit] = useState(false);
-  const [formData, setFormData] = useState({email : '', password : ''});
+  const [formData, setFormData] = useState({
+    email: initialEmail,
+    password: initialPassword
+  });
 
-  // The event parameter represents the form submission event 
-  // that's automatically passed by the browser when a form is submitted.
-  const handleLoginSubmit = (event) => {
-    event.preventDefault();
-    logIn(email, password);
+  /**
+   * Validates if the email has the correct format
+   * @param {string} email - The email to validate
+   * @returns {boolean} - true if the email is valid
+   */
+  const isValidEmail = (email) => {
+    if (!email || typeof email !== 'string') return false;
+    const trimmedEmail = email.trim();
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return emailRegex.test(trimmedEmail);
   };
 
-  const validateForm = (emailValue, passwordValue) => {
-    // Use regex to validate email format
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const isEmailValid = emailRegex.test(emailValue);
-    const isPasswordValid = passwordValue.length >= 8;
-    
+  /**
+   * Checks if the form is valid
+   * @param {string} email - The email value
+   * @param {string} password - The password value
+   * @returns {boolean} - true if the form is valid
+   */
+  const validateForm = (email, password) => {
+    const isEmailValid = email.length > 0 && isValidEmail(email);
+    const isPasswordValid = password.length >= 8;
     return isEmailValid && isPasswordValid;
   };
 
-  const handleChangeEmail = (event) => {
-    const newEmail = event.target.value;
-    setEmail(newEmail);
-    setFormData({...formData, email: newEmail})
-    const isValid = validateForm(newEmail, password);
-    setEnableSubmit(isValid);
+  const handleChangeEmail = (e) => {
+    const newEmail = e.target.value;
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      email: newEmail
+    }));
+    setEnableSubmit(validateForm(newEmail, formData.password));
   };
 
-  const handleChangePassword = (event) => {
-    const newPassword = event.target.value;
-    setPassword(newPassword);
-    setFormData({...formData, password: newPassword});
-    const isValid = validateForm(email, newPassword);
-    setEnableSubmit(isValid);
+  const handleChangePassword = (e) => {
+    const newPassword = e.target.value;
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      password: newPassword
+    }));
+    setEnableSubmit(validateForm(formData.email, newPassword));
+  };
+
+  const handleLoginSubmit = (e) => {
+    e.preventDefault();
+    logIn(formData.email, formData.password);
   };
 
   return (
-    <div>
-      <p className="text-lg mb-5 max-[912px]:text-base">Login to access the full dashboard</p>
-      <form 
-        className="flex flex-wrap items-center gap-4 max-[912px]:flex-col max-[912px]:items-stretch max-[912px]:gap-3"
-        onSubmit={handleLoginSubmit}
-      >
-        <div className="inline-flex items-center gap-2 max-[912px]:flex-col max-[912px]:items-start max-[912px]:w-full">
-          <label htmlFor="email" className="font-normal max-[912px]:mb-1">Email:</label>
-          <input 
-            type="email" 
-            id="email" 
-            name="email" 
-            value={email}
-            onChange={handleChangeEmail}
-            className="px-2.5 py-1 border border-gray-300 rounded text-base max-[912px]:w-full max-[912px]:py-2"
-          />
-        </div>
-        <div className="inline-flex items-center gap-2 max-[912px]:flex-col max-[912px]:items-start max-[912px]:w-full">
-          <label htmlFor="password" className="font-normal max-[912px]:mb-1">Password:</label>
-          <input 
-            type="password" 
-            id="password" 
-            name="password" 
-            value={password}
-            onChange={handleChangePassword}
-            className="px-2.5 py-1 border border-gray-300 rounded text-base max-[912px]:w-full max-[912px]:py-2"
-          />
-        </div>
-        <input 
+    <div className="App-body flex flex-col p-5 pl-1 h-[45vh] border-t-4 border-[color:var(--main-color)]">
+      <p className="text-xl mb-4">Login to access the full dashboard</p>
+      <form onSubmit={handleLoginSubmit} className="text-lg flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-0">
+        <label htmlFor="email" className="sm:pr-2">Email</label>
+        <input
+          type="email"
+          name="email"
+          id="email"
+          value={formData.email}
+          onChange={handleChangeEmail}
+          className="border rounded w-3/5 sm:w-auto px-2 py-1"
+        />
+        <label htmlFor="password" className="sm:pl-2 sm:pr-2">Password</label>
+        <input
+          type="password"
+          name="password"
+          id="password"
+          value={formData.password}
+          onChange={handleChangePassword}
+          className="border rounded w-3/5 sm:w-auto px-2 py-1"
+        />
+        <input
           type="submit"
           value="OK"
           disabled={!enableSubmit}
-          className="px-4 py-1 bg-white text-black border border-gray-300 rounded cursor-pointer text-base hover:bg-gray-100 max-[912px]:w-full max-[912px]:py-2 max-[912px]:mt-2"
+          className="cursor-pointer border px-1 rounded sm:ml-2 w-fit disabled:opacity-50 disabled:cursor-not-allowed"
         />
       </form>
     </div>
@@ -85,4 +95,10 @@ Login.propTypes = {
   password: PropTypes.string
 };
 
-export default Login;
+Login.defaultProps = {
+  logIn: () => {},
+  email: '',
+  password: ''
+};
+
+export default WithLogging(Login);

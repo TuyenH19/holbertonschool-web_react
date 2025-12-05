@@ -1,20 +1,19 @@
-import React, { useContext } from 'react';
 import { getCurrentYear, getFooterCopy } from '../utils/utils';
-import AppContext from '../Context/context';
+import newContext from '../Context/context';
+import { useContext } from 'react';
 
-function Footer() {
-  const { user } = useContext(AppContext);
-
+export default function Footer() {
+  const { user } = useContext(newContext)
   return (
-    <footer className="text-center p-4 italic mt-auto pt-2.5 max-[912px]:p-3 max-[912px]:text-sm">
-      <p>Copyright {getCurrentYear()} - {getFooterCopy(true)}</p>
-      {user.isLoggedIn && (
-        <p>
-          <a href="#" className="text-[var(--main-color)]">Contact us</a>
-        </p>
-      )}
-    </footer>
+    <div className="App-footer flex flex-col justify-center items-center border-t-4 border-[color:var(--main-color)] w-full mt-auto py-2">
+      <p className="italic text-xl p-1 text-center max-[520px]:text-lg max-[520px]:p-0 max-[450px]:text-[16px] max-[375px]:text-[15px]">
+        Copyright {getCurrentYear()} - {getFooterCopy(false)}
+      </p>
+        {user.isLoggedIn && (
+          <p>
+            <a href="#" className="text-blue-600 hover:underline">Contact us</a>
+          </p>
+        )}
+    </div>
   );
 }
-
-export default Footer;
