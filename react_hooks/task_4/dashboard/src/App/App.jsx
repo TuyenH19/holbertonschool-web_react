@@ -1,76 +1,52 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import axios from 'axios';
-import { getCurrentYear, getFooterCopy, getLatestNotification } from '../utils/utils';
 import Notifications from '../Notifications/Notifications';
 import Header from '../Header/Header';
-import Footer from '../Footer/Footer';
 import Login from '../Login/Login';
+import Footer from '../Footer/Footer';
 import CourseList from '../CourseList/CourseList';
 import BodySection from '../BodySection/BodySection';
 import BodySectionWithMarginBottom from '../BodySection/BodySectionWithMarginBottom';
-import WithLogging from '../HOC/WithLogging';
-import AppContext from '../Context/context';
+import { getLatestNotification } from '../utils/utils';
+import newContext from '../Context/context';
 
-const LoginWithLogging = WithLogging(Login);
-const CourseListWithLogging = WithLogging(CourseList);
+const API_BASE_URL = 'http://localhost:5173';
+const ENDPOINTS = {
+  courses: `${API_BASE_URL}/courses.json`,
+  notifications: `${API_BASE_URL}/notifications.json`,
+};
 
-function App() {
+export default function App() {
   const [displayDrawer, setDisplayDrawer] = useState(true);
-  const [user, setUser] = useState({
-    email: '',
-    password: '',
-    isLoggedIn: false
-  });
+  const [user, setUser] = useState({ ...newContext.user });
   const [notifications, setNotifications] = useState([]);
   const [courses, setCourses] = useState([]);
 
-  const logOut = useCallback(() => {
-    setUser({
-      email: '',
-      password: '',
-      isLoggedIn: false
-    });
-  }, []);
-
-  const logIn = useCallback((email, password) => {
-    setUser({
-      email: email,
-      password: password,
-      isLoggedIn: true
-    });
-  }, []);
-
-  const markNotificationAsRead = useCallback((id) => {
-    console.log(`Notification ${id} has been marked as read`);
-    setNotifications(prevNotifications => prevNotifications.filter(notification => notification.id !== id));
-  }, []);
-
-  const handleDisplayDrawer = useCallback(() => {
-    console.log('handleDisplayDrawer called');
-    setDisplayDrawer(true);
-  }, []);
-
-  const handleHideDrawer = useCallback(() => {
-    console.log('handleHideDrawer called');
-    setDisplayDrawer(false);
-  }, []);
-
-  // Fetch notifications when component mounts
   useEffect(() => {
     const fetchNotifications = async () => {
       try {
-        const response = await axios.get('/notifications.json');
-        const notificationsData = response.data.map(notification => {
-          // Handle special case for latest notification
-          if (notification.html === '__LATEST_NOTIFICATION__') {
-            return {
-              ...notification,
-              html: { __html: getLatestNotification() }
-            };
-          }
-          return notification;
-        });
-        setNotifications(notificationsData);
+        const response = await axios.get(ENDPOINTS.notifications);
+
+        const latestNotif = {
+          id: 3,
+          type: 'urgent',
+          html: { __html: getLatestNotification() }
+        };
+        
+        const currentNotifications = response.data.notifications;
+
+        const indexToReplace = currentNotifications.findIndex(
+          notification => notification.id === 3
+        );
+
+        const updatedNotifications = [...currentNotifications];
+        if (indexToReplace !== -1) {
+          updatedNotifications[indexToReplace] = latestNotif;
+        } else {
+          updatedNotifications.push(latestNotif);
+        }
+        
+        setNotifications(updatedNotifications);
       } catch (error) {
         console.error('Error fetching notifications:', error);
       }
@@ -79,54 +55,86 @@ function App() {
     fetchNotifications();
   }, []);
 
-  // Fetch courses when user state changes
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const response = await axios.get('/courses.json');
-        setCourses(response.data);
+        const response = await axios.get(ENDPOINTS.courses);
+        setCourses(response.data.courses);
       } catch (error) {
         console.error('Error fetching courses:', error);
       }
     };
 
+    if (!user.isLoggedIn) {
+      setCourses([]);
+      return;
+    }
+
     fetchCourses();
-  }, [user]);
+  }, [user.isLoggedIn]);
+
+  const handleDisplayDrawer = useCallback(() => {
+    setDisplayDrawer(true);
+  }, []);
+
+  const handleHideDrawer = useCallback(() => {
+    setDisplayDrawer(false);
+  }, []);
+
+  const logIn = (email, password) => {
+    setUser({
+      email,
+      password,
+      isLoggedIn: true
+    });
+  };
+
+  const logOut = () => {
+    setUser({
+      email: '',
+      password: '',
+      isLoggedIn: false,
+    });
+  };
+
+  const markNotificationAsRead = useCallback((id) => {
+    setNotifications(prev =>
+      prev.filter(notification => notification.id !== id)
+    );
+    console.log(`Notification ${id} has been marked as read`);
+  }, []);
 
   return (
-    <AppContext.Provider value={{ user: user, logOut: logOut }}>
-      <div className="root-notifications">
-        <Notifications 
-          notifications={notifications} 
-          displayDrawer={displayDrawer}
-          handleDisplayDrawer={handleDisplayDrawer}
+    <newContext.Provider value={{ user, logOut }}>
+      <div className="relative px-3 min-h-screen flex flex-col">
+        <Notifications
+          notifications={notifications}
           handleHideDrawer={handleHideDrawer}
+          handleDisplayDrawer={handleDisplayDrawer}
+          displayDrawer={displayDrawer}
           markNotificationAsRead={markNotificationAsRead}
         />
-      </div>
-      <div className="App h-screen max-w-full flex flex-col max-[912px]:h-auto">
-        <Header />
-        <div className="flex-1 flex flex-col max-[912px]:p-0">
-          {/* Refactor code use state isLoggedIn
-          {isLoggedIn ? ( */}
-          {user.isLoggedIn ? (
-            <BodySectionWithMarginBottom title="Course list">
-              <CourseListWithLogging courses={courses} />
+        <>
+          <Header />
+          {!user.isLoggedIn ? (
+            <BodySectionWithMarginBottom title="Log in to continue">
+              <Login
+                logIn={logIn}
+                email={user.email}
+                password={user.password}
+              />
             </BodySectionWithMarginBottom>
           ) : (
-            <div className="mb-10 px-5 max-[912px]:px-3 max-[912px]:mb-5">
-              <h2 className="text-xl font-bold pb-2.5 mb-2.5 border-b-[3px] border-[var(--main-color)]">Log in to continue</h2> 
-              <LoginWithLogging logIn={logIn} />
-            </div>
+            <BodySectionWithMarginBottom title="Course list">
+              <CourseList courses={courses} />
+            </BodySectionWithMarginBottom>
           )}
           <BodySection title="News from the School">
-            <p>Holberton School News goes here</p>
+            <p>Holberton School news goes here</p>
           </BodySection>
-        </div>
+        </>
         <Footer />
       </div>
-    </AppContext.Provider>
+    </newContext.Provider>
   );
 }
-
-export default App;
