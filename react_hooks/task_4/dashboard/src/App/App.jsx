@@ -1,4 +1,5 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
+import axios from 'axios';
 import { getCurrentYear, getFooterCopy, getLatestNotification } from '../utils/utils';
 import Notifications from '../Notifications/Notifications';
 import Header from '../Header/Header';
@@ -20,16 +21,8 @@ function App() {
     password: '',
     isLoggedIn: false
   });
-  const [notifications, setNotifications] = useState([
-    { id: 1, type: 'default', value: 'New course available' },
-    { id: 2, type: 'urgent', value: 'New resume available' },
-    { id: 3, type: 'urgent', html: { __html: getLatestNotification() } }
-  ]);
-  const [courses, setCourses] = useState([
-    { id: 1, name: 'ES6', credit: '60' },
-    { id: 2, name: 'Webpack', credit: '20' },
-    { id: 3, name: 'React', credit: '40' }
-  ]);
+  const [notifications, setNotifications] = useState([]);
+  const [courses, setCourses] = useState([]);
 
   const logOut = useCallback(() => {
     setUser({
@@ -62,20 +55,43 @@ function App() {
     setDisplayDrawer(false);
   }, []);
 
-  // useEffect(() => {
-  //   const handleKeyDown = (event) => {
-  //     if (event.ctrlKey && event.key === 'h') {
-  //       alert('Logging you out');
-  //       logOut();
-  //     }
-  //   };
+  // Fetch notifications when component mounts
+  useEffect(() => {
+    const fetchNotifications = async () => {
+      try {
+        const response = await axios.get('/notifications.json');
+        const notificationsData = response.data.map(notification => {
+          // Handle special case for latest notification
+          if (notification.html === '__LATEST_NOTIFICATION__') {
+            return {
+              ...notification,
+              html: { __html: getLatestNotification() }
+            };
+          }
+          return notification;
+        });
+        setNotifications(notificationsData);
+      } catch (error) {
+        console.error('Error fetching notifications:', error);
+      }
+    };
 
-  //   document.addEventListener('keydown', handleKeyDown);
-    
-  //   return () => {
-  //     document.removeEventListener('keydown', handleKeyDown);
-  //   };
-  // }, [logOut]); // Re-run when logOut changes
+    fetchNotifications();
+  }, []);
+
+  // Fetch courses when user state changes
+  useEffect(() => {
+    const fetchCourses = async () => {
+      try {
+        const response = await axios.get('/courses.json');
+        setCourses(response.data);
+      } catch (error) {
+        console.error('Error fetching courses:', error);
+      }
+    };
+
+    fetchCourses();
+  }, [user]);
 
   return (
     <AppContext.Provider value={{ user: user, logOut: logOut }}>
