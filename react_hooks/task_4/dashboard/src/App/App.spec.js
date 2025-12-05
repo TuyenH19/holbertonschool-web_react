@@ -324,11 +324,7 @@ describe('App', () => {
   test('handleHideDrawer updates displayDrawer state to false', () => {
     const { container } = render(<App />);
     
-    // First, open the drawer by clicking the menu item
-    const menuItem = screen.getByText(/your notifications/i);
-    fireEvent.click(menuItem);
-    
-    // Verify drawer is visible
+    // displayDrawer is initially true, so drawer should already be visible
     let notificationsDrawer = screen.queryByText(/here is the list of notifications/i);
     expect(notificationsDrawer).toBeInTheDocument();
     
