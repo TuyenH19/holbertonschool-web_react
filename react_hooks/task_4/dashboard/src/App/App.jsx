@@ -62,20 +62,20 @@ function App() {
     setDisplayDrawer(false);
   };
 
-  const handleKeyDown = (event) => {
-    if (event.ctrlKey && event.key === 'h') {
-      alert('Logging you out');
-      logOut();
-    }
-  };
-
   useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.ctrlKey && event.key === 'h') {
+        alert('Logging you out');
+        logOut();
+      }
+    };
+
     document.addEventListener('keydown', handleKeyDown);
     
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
     };
-  }, []); // Empty dependency array = componentDidMount + componentWillUnmount
+  }, [logOut]); // Re-run when logOut changes
 
   return (
     <AppContext.Provider value={{ user: user, logOut: logOut }}>
