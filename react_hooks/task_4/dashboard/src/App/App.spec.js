@@ -1,8 +1,14 @@
 import { render, screen, fireEvent, waitFor, act } from '@testing-library/react'
+import mockAxios from 'jest-mock-axios';
 import App from './App'
 import { getCurrentYear, getFooterCopy } from '../utils/utils'
 
 describe('App', () => {
+  afterEach(() => {
+    // Clean up any pending requests after each test
+    mockAxios.reset();
+  });
+
   test('renders h1 element with School Dashboard text', () => {
     render(<App />);
     const heading = screen.getByRole('heading', { name: /school dashboard/i });
@@ -294,35 +300,71 @@ describe('App', () => {
     consoleSpy.mockRestore();
   });
 
-  test('handleDisplayDrawer updates displayDrawer state to true', () => {
+  test('handleDisplayDrawer updates displayDrawer state to true', async () => {
+    const mockNotifications = [
+      { id: 1, type: 'default', value: 'New course available' }
+    ];
+    const mockCourses = [
+      { id: 1, name: 'ES6', credit: '60' }
+    ];
+
     const { container } = render(<App />);
+    
+    // Mock axios responses for initial data fetching
+    await act(async () => {
+      mockAxios.mockResponse({ data: mockNotifications });
+    });
+    await act(async () => {
+      mockAxios.mockResponse({ data: mockCourses });
+    });
     
     // displayDrawer is initially true, so drawer should be visible
     const menuItem = screen.getByText(/your notifications/i);
     expect(menuItem).toBeInTheDocument();
     
     // Notifications drawer should be visible initially
-    let notificationsDrawer = screen.queryByText(/here is the list of notifications/i);
-    expect(notificationsDrawer).toBeInTheDocument();
+    await waitFor(() => {
+      const notificationsDrawer = screen.queryByText(/here is the list of notifications/i);
+      expect(notificationsDrawer).toBeInTheDocument();
+    });
     
     // Close the drawer first
     const closeButton = screen.getByLabelText(/close/i);
     fireEvent.click(closeButton);
     
     // Verify drawer is now hidden
-    notificationsDrawer = screen.queryByText(/here is the list of notifications/i);
-    expect(notificationsDrawer).not.toBeInTheDocument();
+    await waitFor(() => {
+      const notificationsDrawer = screen.queryByText(/here is the list of notifications/i);
+      expect(notificationsDrawer).not.toBeInTheDocument();
+    });
     
     // Click on the menu item to trigger handleDisplayDrawer
     fireEvent.click(menuItem);
     
     // Now notifications drawer should be visible again
-    notificationsDrawer = screen.queryByText(/here is the list of notifications/i);
-    expect(notificationsDrawer).toBeInTheDocument();
+    await waitFor(() => {
+      const notificationsDrawer = screen.queryByText(/here is the list of notifications/i);
+      expect(notificationsDrawer).toBeInTheDocument();
+    });
   });
 
   test('handleHideDrawer updates displayDrawer state to false', async () => {
+    const mockNotifications = [
+      { id: 1, type: 'default', value: 'New course available' }
+    ];
+    const mockCourses = [
+      { id: 1, name: 'ES6', credit: '60' }
+    ];
+
     const { container } = render(<App />);
+    
+    // Mock axios responses for initial data fetching
+    await act(async () => {
+      mockAxios.mockResponse({ data: mockNotifications });
+    });
+    await act(async () => {
+      mockAxios.mockResponse({ data: mockCourses });
+    });
     
     // displayDrawer is initially true, so drawer should already be visible
     // Wait for the drawer to be rendered
@@ -425,6 +467,89 @@ describe('App', () => {
     const newPasswordInput = screen.getByLabelText(/password:/i);
     expect(newEmailInput).toBeInTheDocument();
     expect(newPasswordInput).toBeInTheDocument();
+  });
+
+  test('Verify that notifications data is successfully retrieved when the App component loads initially', async () => {
+    // Mock notifications data
+    const mockNotifications = [
+      { id: 1, type: 'default', value: 'New course available' },
+      { id: 2, type: 'urgent', value: 'New resume available' },
+      { id: 3, type: 'urgent', html: '__LATEST_NOTIFICATION__' }
+    ];
+
+    // Render the App component
+    render(<App />);
+
+    // Verify axios.get was called for notifications
+    expect(mockAxios.get).toHaveBeenCalledWith('/notifications.json');
+
+    // Simulate successful response
+    await act(async () => {
+      mockAxios.mockResponse({ data: mockNotifications });
+    });
+
+    // Wait for notifications to be processed and rendered
+    await waitFor(() => {
+      // Check if notifications are rendered (drawer is open by default)
+      const notificationItems = screen.queryAllByRole('listitem');
+      expect(notificationItems.length).toBeGreaterThan(0);
+    });
+  });
+
+  test('Verify that courses data is successfully retrieved when the user\'s state changes', async () => {
+    // Mock courses data
+    const mockCourses = [
+      { id: 1, name: 'ES6', credit: '60' },
+      { id: 2, name: 'Webpack', credit: '20' },
+      { id: 3, name: 'React', credit: '40' }
+    ];
+
+    const mockNotifications = [
+      { id: 1, type: 'default', value: 'New course available' }
+    ];
+
+    // Render the App component
+    render(<App />);
+
+    // Resolve initial notifications request
+    await act(async () => {
+      mockAxios.mockResponse({ data: mockNotifications });
+    });
+
+    // Resolve initial courses request (triggered on mount)
+    await act(async () => {
+      mockAxios.mockResponse({ data: mockCourses });
+    });
+
+    // Get login inputs
+    const emailInput = screen.getByLabelText(/email:/i);
+    const passwordInput = screen.getByLabelText(/password:/i);
+    const submitButton = screen.getByRole('button', { name: /ok/i });
+
+    // Fill in credentials
+    fireEvent.change(emailInput, { target: { value: 'test@example.com' } });
+    fireEvent.change(passwordInput, { target: { value: 'password123' } });
+
+    // Submit the form to trigger user state change
+    await act(async () => {
+      fireEvent.click(submitButton);
+    });
+
+    // Verify axios.get was called again for courses (due to user state change)
+    await waitFor(() => {
+      expect(mockAxios.get).toHaveBeenCalledWith('/courses.json');
+    });
+
+    // Resolve the courses request triggered by user state change
+    await act(async () => {
+      mockAxios.mockResponse({ data: mockCourses });
+    });
+
+    // Verify courses are rendered
+    await waitFor(() => {
+      const courseListTable = screen.queryByRole('table');
+      expect(courseListTable).toBeInTheDocument();
+    });
   });
   
 });
