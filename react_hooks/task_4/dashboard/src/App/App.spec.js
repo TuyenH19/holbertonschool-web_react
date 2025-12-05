@@ -321,20 +321,25 @@ describe('App', () => {
     expect(notificationsDrawer).toBeInTheDocument();
   });
 
-  test('handleHideDrawer updates displayDrawer state to false', () => {
+  test('handleHideDrawer updates displayDrawer state to false', async () => {
     const { container } = render(<App />);
     
     // displayDrawer is initially true, so drawer should already be visible
-    let notificationsDrawer = screen.queryByText(/here is the list of notifications/i);
-    expect(notificationsDrawer).toBeInTheDocument();
+    // Wait for the drawer to be rendered
+    await waitFor(() => {
+      const notificationsDrawer = screen.queryByText(/here is the list of notifications/i);
+      expect(notificationsDrawer).toBeInTheDocument();
+    });
     
     // Find and click the close button to trigger handleHideDrawer
     const closeButton = screen.getByLabelText(/close/i);
     fireEvent.click(closeButton);
     
     // Now notifications drawer should be hidden
-    notificationsDrawer = screen.queryByText(/here is the list of notifications/i);
-    expect(notificationsDrawer).not.toBeInTheDocument();
+    await waitFor(() => {
+      const notificationsDrawer = screen.queryByText(/here is the list of notifications/i);
+      expect(notificationsDrawer).not.toBeInTheDocument();
+    });
   });
 
   test('logIn function updates user state with email, password, and isLoggedIn', async () => {
