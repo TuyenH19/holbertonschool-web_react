@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { getCurrentYear, getFooterCopy, getLatestNotification } from '../utils/utils';
 import Notifications from '../Notifications/Notifications';
 import Header from '../Header/Header';
@@ -31,36 +31,36 @@ function App() {
     { id: 3, name: 'React', credit: '40' }
   ]);
 
-  const logOut = () => {
+  const logOut = useCallback(() => {
     setUser({
       email: '',
       password: '',
       isLoggedIn: false
     });
-  };
+  }, []);
 
-  const logIn = (email, password) => {
+  const logIn = useCallback((email, password) => {
     setUser({
       email: email,
       password: password,
       isLoggedIn: true
     });
-  };
+  }, []);
 
-  const markNotificationAsRead = (id) => {
+  const markNotificationAsRead = useCallback((id) => {
     console.log(`Notification ${id} has been marked as read`);
-    setNotifications(notifications.filter(notification => notification.id !== id));
-  };
+    setNotifications(prevNotifications => prevNotifications.filter(notification => notification.id !== id));
+  }, []);
 
-  const handleDisplayDrawer = () => {
+  const handleDisplayDrawer = useCallback(() => {
     console.log('handleDisplayDrawer called');
     setDisplayDrawer(true);
-  };
+  }, []);
 
-  const handleHideDrawer = () => {
+  const handleHideDrawer = useCallback(() => {
     console.log('handleHideDrawer called');
     setDisplayDrawer(false);
-  };
+  }, []);
 
   useEffect(() => {
     const handleKeyDown = (event) => {
