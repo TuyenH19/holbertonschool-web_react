@@ -1,32 +1,59 @@
-import React, { PureComponent } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 
-class NotificationItem extends PureComponent {
+class NotificationItem extends React.PureComponent {
   render() {
-    const { type, html, value, id, markAsRead } = this.props;
-    const colorClass = type === 'urgent' ? 'text-[var(--urgent-notification-item)]' : 'text-[var(--default-notification-item)]';
+    const { type, html, value, markAsRead, id } = this.props;
 
-    if (html) {
+    if (type === 'default') {
       return (
-        <li 
+        <li
+          className="text-[color:var(--default-notification-item)] pl-1 max-[912px]:text-[20px] max-[912px]:w-full max-[912px]:border-b max-[912px]:border-black max-[912px]:p-[10px_8px]"
           data-notification-type={type}
-          className={`${colorClass} flex items-start gap-2 mb-2 before:content-['■'] before:text-base max-[912px]:p-3 max-[912px]:border-b max-[912px]:border-black max-[912px]:text-xl`}
+          onClick={() => markAsRead(id)}
+        >
+          {value}
+        </li>
+      );
+    } else if (type === 'urgent' && html !== undefined) {
+      return (
+        <li
+          className="text-[color:var(--urgent-notification-item)] pl-1 max-[912px]:text-[20px] max-[912px]:w-full max-[912px]:border-b max-[912px]:border-black max-[912px]:p-[10px_8px]"
+          data-notification-type={type}
           dangerouslySetInnerHTML={html}
           onClick={() => markAsRead(id)}
         />
       );
+    } else {
+      return (
+        <li
+          className="text-[color:var(--urgent-notification-item)] pl-1 max-[912px]:text-[20px] max-[912px]:w-full max-[912px]:border-b max-[912px]:border-black max-[912px]:p-[10px_8px]"
+          data-notification-type={type}
+          onClick={() => markAsRead(id)}
+        >
+          {value}
+        </li>
+      );
     }
-
-    return (
-      <li 
-        data-notification-type={type}
-        className={`${colorClass} flex items-start gap-2 mb-2 max-[912px]:p-3 max-[912px]:border-b max-[912px]:border-black max-[912px]:text-xl`}
-        onClick={() => markAsRead(id)}
-      >
-        <span className="text-base max-[912px]:hidden">■</span>
-        <span>{value}</span>
-      </li>
-    );
   }
 }
+
+NotificationItem.propTypes = {
+  type: PropTypes.string,
+  html: PropTypes.shape({
+    __html: PropTypes.string
+  }),
+  value: PropTypes.string,
+  markAsRead: PropTypes.func,
+  id: PropTypes.number
+};
+
+NotificationItem.defaultProps = {
+  type: 'default',
+  html: undefined,
+  value: '',
+  markAsRead: () => {},
+  id: 0
+};
 
 export default NotificationItem;

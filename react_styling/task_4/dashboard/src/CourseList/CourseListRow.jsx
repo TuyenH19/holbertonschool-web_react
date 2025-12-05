@@ -1,43 +1,33 @@
-function CourseListRow({ isHeader = false, textFirstCell = '', textSecondCell = null }) {
-  const headerStyle = { 
-    backgroundColor: 'var(--color-table-header)', 
-    opacity: 0.65,
-    border: '1px solid rgb(156 163 175)' // gray-400
-  };
-  const rowStyle = { 
-    backgroundColor: 'var(--color-table-rows)', 
-    opacity: 0.45,
-    border: '1px solid rgb(156 163 175)' // gray-400
-  };
-  const cellStyle = {
-    backgroundColor: 'var(--color-table-rows)',
-    opacity: 1,
-    border: '1px solid rgb(156 163 175)' // gray-400
-  };
+import PropTypes from 'prop-types';
 
-  if (isHeader) {
-    if (textSecondCell === null) {
-      return (
-        <tr style={rowStyle}>
-          <th style={headerStyle} colSpan="2">{textFirstCell}</th>
-        </tr>
-      );
-    } else {
-      return (
-        <tr style={rowStyle}>
-          <th style={headerStyle}>{textFirstCell}</th>
-          <th style={headerStyle}>{textSecondCell}</th>
-        </tr>
-      );
-    }
-  } else {
-    return (
-      <tr style={rowStyle}>
-        <td className="pl-2" style={cellStyle}>{textFirstCell}</td>
-        <td className="pl-2" style={cellStyle}>{textSecondCell}</td>
-      </tr>
-    );
-  }
+function CourseListRow({ isHeader = false, textFirstCell = '', textSecondCell = null }) {
+  return (
+    <tr className={isHeader
+      ? "bg-[color-mix(in_srgb,var(--color-table-header)_66%,transparent)]"
+      : "bg-[color-mix(in_srgb,var(--color-table-rows)_45%,transparent)]"
+    }>
+      {isHeader ? (
+        <>
+          <th className="border border-gray-400" colSpan={textSecondCell ? 1 : 2}>{textFirstCell}</th>
+          {textSecondCell && <th className="border border-gray-400">{textSecondCell}</th>}
+        </>
+      ) : (
+        <>
+          <td className="border border-gray-400 pl-2">{textFirstCell}</td>
+          <td className="border border-gray-400 pl-2">{textSecondCell}</td>
+        </>
+      )}
+    </tr>
+  );
 }
+
+CourseListRow.propTypes = {
+  isHeader: PropTypes.bool,
+  textFirstCell: PropTypes.string.isRequired,
+  textSecondCell: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.number
+  ])
+};
 
 export default CourseListRow;

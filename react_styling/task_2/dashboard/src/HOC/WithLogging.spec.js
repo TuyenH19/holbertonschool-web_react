@@ -1,70 +1,83 @@
-import React, { Component } from 'react';
-import { render, screen, cleanup } from '@testing-library/react';
-import '@testing-library/jest-dom';
+import React from 'react';
+import { render, cleanup, screen } from '@testing-library/react';
 import WithLogging from './WithLogging';
 
-describe('WithLogging HOC', () => {
-  // Create a mock component to wrap with WithLogging
-  class MockAppComponent extends Component {
-    render() {
-      return <h1>Hello from Mock App Component</h1>;
-    }
+afterEach(() => {
+  cleanup();
+  jest.restoreAllMocks();
+});
+
+class MockApp extends React.Component {
+  render() {
+    return (
+      <h1>Hello from Mock App Component</h1>
+    );
   }
+}
 
-  // Wrap the mock component with WithLogging HOC
-  const MockAppComponentWithLogging = WithLogging(MockAppComponent);
+describe('WithLogging HOC', () => {
+  test('renders the wrapped component correctly', () => {
+    const WrappedMockApp = WithLogging(MockApp);
 
-  // Nameless component test
-  const NamelessComponentWithLogging = WithLogging(() => (
-    <h1>Hello from Mock App Component</h1>
-  ));
+    render(<WrappedMockApp />);
 
-  afterEach(() => {
-    cleanup();
-    jest.clearAllMocks();
-    jest.restoreAllMocks();
-  });
-
-  test('renders a heading element with the text Hello from Mock App Component', () => {
-    render(<MockAppComponentWithLogging />);
-    
     const heading = screen.getByRole('heading', { level: 1 });
     expect(heading).toBeInTheDocument();
     expect(heading).toHaveTextContent('Hello from Mock App Component');
   });
 
-  test('logs component mount and unmount to console', () => {
+  test('logs mount message on component mount', () => {
     const consoleSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
-    
-    const { unmount } = render(<MockAppComponentWithLogging />);
-    
-    // Check mount log (may be called twice due to StrictMode)
-    expect(consoleSpy).toHaveBeenCalledWith('Component MockAppComponent is mounted');
-    
+
+    const WrappedMockApp = WithLogging(MockApp);
+
+    render(<WrappedMockApp />);
+
+    expect(consoleSpy).toHaveBeenCalledWith('Component MockApp is mounted');
+  });
+
+  test('logs unmount message on component unmount', () => {
+    const consoleSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
+
+    const WrappedMockApp = WithLogging(MockApp);
+
+    const { unmount } = render(<WrappedMockApp />);
+
     unmount();
-    
-    // Check unmount log (may be called twice due to StrictMode)
-    expect(consoleSpy).toHaveBeenCalledWith('Component MockAppComponent is going to unmount');
-    
-    consoleSpy.mockRestore();
+
+    expect(consoleSpy).toHaveBeenCalledWith('Component MockApp is going to unmount');
   });
 
-  test('HOC displayName is set correctly for named component', () => {
-    expect(MockAppComponentWithLogging.displayName).toBe('WithLogging(MockAppComponent)');
-  });
-
-  test('HOC handles nameless components and defaults to "Component"', () => {
+  test('uses "Component" as default name when wrapped element has no name', () => {
     const consoleSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
-    
-    render(<NamelessComponentWithLogging />);
-    
-    // Should log with default name "Component"
+
+    const AnonymousComponent = () => <p>Anonymous</p>;
+    Object.defineProperty(AnonymousComponent, 'name', { value: '' });
+
+    const WrappedAnonymous = WithLogging(AnonymousComponent);
+
+    render(<WrappedAnonymous />);
+
     expect(consoleSpy).toHaveBeenCalledWith('Component Component is mounted');
-    
-    consoleSpy.mockRestore();
   });
 
-  test('HOC displayName defaults to "Component" for nameless components', () => {
-    expect(NamelessComponentWithLogging.displayName).toBe('WithLogging(Component)');
+  test('has correct displayName for debugging', () => {
+    const WrappedMockApp = WithLogging(MockApp);
+
+    expect(WrappedMockApp.displayName).toBe('WithLogging(MockApp)');
+  });
+
+  test('passes props to the wrapped component', () => {
+    class PropsComponent extends React.Component {
+      render() {
+        return <p>Hello {this.props.name}</p>;
+      }
+    }
+
+    const WrappedPropsComponent = WithLogging(PropsComponent);
+
+    render(<WrappedPropsComponent name="World" />);
+
+    expect(screen.getByText('Hello World')).toBeInTheDocument();
   });
 });

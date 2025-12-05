@@ -1,12 +1,18 @@
-import React, { Component } from 'react';
+import React from 'react';
 
-const WithLogging = (WrappedComponent) => {
-  // Extract the component name with proper fallback handling
-  const wrappedComponentName = WrappedComponent.displayName 
-    || WrappedComponent.name 
-    || 'Component';
+/**
+ * HOC (Higher Order Component) which adds logging
+ * to the assembly and disassembly of a component.
+ * @param {React.Component} WrappedComponent - The component to be wrapped
+ * @returns {React.Component} - The new component with logging
+ */
+function WithLogging(WrappedComponent) {
+  const wrappedComponentName = 
+    WrappedComponent.displayName || 
+    WrappedComponent.name || 
+    'Component';
 
-  class WithLoggingHOC extends Component {
+  class WithLoggingComponent extends React.Component {
     componentDidMount() {
       console.log(`Component ${wrappedComponentName} is mounted`);
     }
@@ -19,11 +25,10 @@ const WithLogging = (WrappedComponent) => {
       return <WrappedComponent {...this.props} />;
     }
   }
-  
-  // Set displayName for React DevTools debugging
-  WithLoggingHOC.displayName = `WithLogging(${wrappedComponentName})`;
-  
-  return WithLoggingHOC;
-};
+
+  WithLoggingComponent.displayName = `WithLogging(${wrappedComponentName})`;
+
+  return WithLoggingComponent;
+}
 
 export default WithLogging;

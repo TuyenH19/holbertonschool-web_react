@@ -20,8 +20,3 @@
 #CourseList td[colspan="2"] {
   text-align: center;
 }
-
-#CourseList td.no-course-message {
-  text-align: center;
-  font-weight: bold;
-}

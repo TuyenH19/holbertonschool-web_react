@@ -1,36 +1,21 @@
+import React from 'react';
+import WithLogging from '../HOC/WithLogging';
 
-function Login() {
-  return (
-    <div>
-      <p className="text-lg mb-5">Login to access the full dashboard</p>
-      <form className="flex flex-wrap items-center gap-4">
-        <div className="inline-flex items-center gap-2">
-          <label htmlFor="email" className="font-normal">Email:</label>
-          <input 
-            type="email" 
-            id="email" 
-            name="email" 
-            className="px-2.5 py-1 border border-gray-300 rounded text-base"
-          />
+class Login extends React.Component {
+  render() {
+    return (
+      <div className="App-body flex flex-col p-5 pl-10 h-[45vh] border-t-4 border-[color:var(--main-color)]">
+        <p className="text-xl">Login to access the full dashboard</p>
+        <div className="mt-8 text-lg">
+          <label htmlFor="email" className="pr-2">Email</label>
+          <input type="email" name="email" id="email" className="border rounded" />
+          <label htmlFor="password" className="pl-2 pr-2">Password</label>
+          <input type="password" name="password" id="password" className="border rounded" />
+          <button type="button" className="cursor-pointer border px-1 rounded ml-2">OK</button>
         </div>
-        <div className="inline-flex items-center gap-2">
-          <label htmlFor="password" className="font-normal">Password:</label>
-          <input 
-            type="password" 
-            id="password" 
-            name="password" 
-            className="px-2.5 py-1 border border-gray-300 rounded text-base"
-          />
-        </div>
-        <button 
-          type="button"
-          className="px-4 py-1 bg-white text-black border border-gray-300 rounded cursor-pointer text-base hover:bg-gray-100"
-        >
-          OK
-        </button>
-      </form>
-    </div>
-  )
-};
+      </div>
+    );
+  }
+}
 
-export default Login;
+export default WithLogging(Login);

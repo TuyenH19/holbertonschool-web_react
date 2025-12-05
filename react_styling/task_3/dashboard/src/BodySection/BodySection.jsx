@@ -1,15 +1,22 @@
-import React, {Component} from "react";
+import React from 'react';
+import PropTypes from 'prop-types';
 
-class BodySection extends Component {
+class BodySection extends React.Component {
   render() {
     const { title, children } = this.props;
+
     return (
-      <div className="px-5 pb-2.5 mb-5 border-b-[3px] border-[var(--main-color)] pt-60">
-        <h2 className="text-xl font-bold mb-2.5">{title}</h2>
+      <div className="bodySection mb-5">
+        <h2 className="font-bold text-xl mt-8">{title}</h2>
         {children}
       </div>
     );
   }
 }
+
+BodySection.propTypes = {
+  title: PropTypes.string.isRequired,
+  children: PropTypes.node
+};
 
 export default BodySection;

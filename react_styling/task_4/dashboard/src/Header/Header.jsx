@@ -1,11 +1,13 @@
-import holbertonLogo from '../assets/holberton-logo.jpg';
+import logo from '../assets/holberton-logo.jpg';
 
 function Header() {
   return (
-    <header className="flex items-center p-4 max-[912px]:p-2 max-[520px]:flex-col max-[520px]:text-center">
-      <img src={holbertonLogo} alt="holberton logo" className="h-[200px] w-[200px] max-[912px]:h-[150px] max-[912px]:w-[150px] max-[520px]:h-[120px] max-[520px]:w-[120px]" />
-      <h1 className="text-[var(--main-color)] ml-4 text-4xl font-bold max-[912px]:text-3xl max-[520px]:text-2xl max-[520px]:ml-0 max-[520px]:mt-2">School Dashboard</h1>
-    </header>
+    <div className="App-header flex items-center py-2 max-[520px]:flex-col">
+      <img src={logo} className="App-logo h-60 pointer-events-none max-[520px]:h-60" alt="holberton logo" />
+      <h1 className="font-bold text-[color:var(--main-color)] text-5xl max-[520px]:text-5xl max-[520px]:mt-2 max-[435px]:text-4xl">
+        School Dashboard
+      </h1>
+    </div>
   );
 }
 

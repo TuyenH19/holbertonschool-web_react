@@ -1,36 +1,21 @@
+import React from 'react';
+import WithLogging from '../HOC/WithLogging';
 
-function Login() {
-  return (
-    <div>
-      <p className="text-lg mb-5 max-[912px]:text-base">Login to access the full dashboard</p>
-      <form className="flex flex-wrap items-center gap-4 max-[912px]:flex-col max-[912px]:items-stretch max-[912px]:gap-3">
-        <div className="inline-flex items-center gap-2 max-[912px]:flex-col max-[912px]:items-start max-[912px]:w-full">
-          <label htmlFor="email" className="font-normal max-[912px]:mb-1">Email:</label>
-          <input 
-            type="email" 
-            id="email" 
-            name="email" 
-            className="px-2.5 py-1 border border-gray-300 rounded text-base max-[912px]:w-full max-[912px]:py-2"
-          />
+class Login extends React.Component {
+  render() {
+    return (
+      <div className="App-body flex flex-col p-5 pl-1 h-[45vh] border-t-4 border-[color:var(--main-color)]">
+        <p className="text-xl mb-4">Login to access the full dashboard</p>
+        <div className="text-lg flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-0">
+          <label htmlFor="email" className="sm:pr-2">Email</label>
+          <input type="email" name="email" id="email" className="border rounded w-3/5 sm:w-auto px-2 py-1" />
+          <label htmlFor="password" className="sm:pl-2 sm:pr-2">Password</label>
+          <input type="password" name="password" id="password" className="border rounded w-3/5 sm:w-auto px-2 py-1" />
+          <button type="button" className="cursor-pointer border px-1 rounded sm:ml-2 w-fit">OK</button>
         </div>
-        <div className="inline-flex items-center gap-2 max-[912px]:flex-col max-[912px]:items-start max-[912px]:w-full">
-          <label htmlFor="password" className="font-normal max-[912px]:mb-1">Password:</label>
-          <input 
-            type="password" 
-            id="password" 
-            name="password" 
-            className="px-2.5 py-1 border border-gray-300 rounded text-base max-[912px]:w-full max-[912px]:py-2"
-          />
-        </div>
-        <button 
-          type="button"
-          className="px-4 py-1 bg-white text-black border border-gray-300 rounded cursor-pointer text-base hover:bg-gray-100 max-[912px]:w-full max-[912px]:py-2 max-[912px]:mt-2"
-        >
-          OK
-        </button>
-      </form>
-    </div>
-  )
-};
+      </div>
+    );
+  }
+}
 
-export default Login;
+export default WithLogging(Login);

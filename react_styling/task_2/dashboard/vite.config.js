@@ -4,10 +4,13 @@ import tailwindcss from '@tailwindcss/vite'
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [react(), tailwindcss()],
+  plugins: [
+    react(),
+    tailwindcss()
+  ],
+  base: '/holbertonschool-web_react/',
   server: {
-    host: true, // Expose to all network interfaces
-    port: 5173,  // Specify port
-    open: true   // Auto-open in browser
+    host: '0.0.0.0',
+    port: 5173
   }
 })

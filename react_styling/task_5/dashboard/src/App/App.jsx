@@ -1,21 +1,31 @@
-import React, { Component } from 'react';
-import { getCurrentYear, getFooterCopy, getLatestNotification } from '../utils/utils';
+import React from 'react';
+import PropTypes from 'prop-types';
 import Notifications from '../Notifications/Notifications';
 import Header from '../Header/Header';
-import Footer from '../Footer/Footer';
 import Login from '../Login/Login';
+import Footer from '../Footer/Footer';
 import CourseList from '../CourseList/CourseList';
 import BodySection from '../BodySection/BodySection';
 import BodySectionWithMarginBottom from '../BodySection/BodySectionWithMarginBottom';
-import WithLogging from '../HOC/WithLogging';
+import { getLatestNotification } from '../utils/utils';
 
-const LoginWithLogging = WithLogging(Login);
-const CourseListWithLogging = WithLogging(CourseList);
+const notificationsList = [
+  { id: 1, type: 'default', value: 'New course available' },
+  { id: 2, type: 'urgent', value: 'New resume available' },
+  { id: 3, type: 'urgent', html: { __html: getLatestNotification() } }
+];
 
-class App extends Component {
-  static defaultProps = {
-    logOut: () => {}
-  };
+const coursesList = [
+  { id: 1, name: 'ES6', credit: 60 },
+  { id: 2, name: 'Webpack', credit: 20 },
+  { id: 3, name: 'React', credit: 40 }
+];
+
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.handleKeyDown = this.handleKeyDown.bind(this);
+  }
 
   componentDidMount() {
     document.addEventListener('keydown', this.handleKeyDown);
@@ -25,55 +35,56 @@ class App extends Component {
     document.removeEventListener('keydown', this.handleKeyDown);
   }
 
-  handleKeyDown = (event) => {
+  handleKeyDown(event) {
     if (event.ctrlKey && event.key === 'h') {
       alert('Logging you out');
-      this.props.logOut();
+      if (this.props.logOut) {
+        this.props.logOut();
+      }
     }
-  };
+  }
 
   render() {
-    const { isLoggedIn = false } = this.props;
-
-    const notificationsList = [
-      { id: 1, type: 'default', value: 'New course available' },
-      { id: 2, type: 'urgent', value: 'New resume available' },
-      { id: 3, type: 'urgent', html: { __html: getLatestNotification() } }
-    ];
-
-    const coursesList = [
-      { id: 1, name: 'ES6', credit: '60' },
-      { id: 2, name: 'Webpack', credit: '20' },
-      { id: 3, name: 'React', credit: '40' }
-    ];
+    const { isLoggedIn = false, displayDrawer = true } = this.props;
 
     return (
-      <>
-        <div className="root-notifications">
-          <Notifications notifications={notificationsList} displayDrawer={true} />
+      <div className="relative px-3 min-h-screen flex flex-col">
+        <div className="absolute top-0 right-0 z-10">
+          <Notifications notifications={notificationsList} displayDrawer={displayDrawer} />
         </div>
-        <div className="App h-screen max-w-full flex flex-col max-[912px]:h-auto">
+        <div className="flex-1">
           <Header />
-          <div className="flex-1 flex flex-col max-[912px]:p-0">
-            {isLoggedIn ? (
-              <BodySectionWithMarginBottom title="Course list">
-                <CourseListWithLogging courses={coursesList} />
-              </BodySectionWithMarginBottom>
-            ) : (
-              <div className="mb-10 px-5 max-[912px]:px-3 max-[912px]:mb-5">
-                <h2 className="text-xl font-bold pb-2.5 mb-2.5 border-b-[3px] border-[var(--main-color)]">Log in to continue</h2>
-                <LoginWithLogging />
-              </div>
-            )}
-            <BodySection title="News from the School">
-              <p>Holberton School News goes here</p>
-            </BodySection>
-          </div>
-          <Footer />
+          {!isLoggedIn ? (
+            <BodySectionWithMarginBottom title="Log in to continue">
+              <Login />
+            </BodySectionWithMarginBottom>
+          ) : (
+            <BodySectionWithMarginBottom title="Course list">
+              <CourseList courses={coursesList} />
+            </BodySectionWithMarginBottom>
+          )}
+          <BodySection title="News from the School">
+            <p>
+              ipsum Lorem ipsum dolor sit amet consectetur, adipisicing elit. Similique, asperiores architecto blanditiis fuga doloribus sit illum aliquid ea distinctio minus accusantium, impedit quo voluptatibus ut magni dicta. Recusandae, quia dicta?
+            </p>
+          </BodySection>
         </div>
-      </>
+        <Footer />
+      </div>
     );
   }
 }
+
+App.propTypes = {
+  isLoggedIn: PropTypes.bool,
+  displayDrawer: PropTypes.bool,
+  logOut: PropTypes.func
+};
+
+App.defaultProps = {
+  isLoggedIn: false,
+  displayDrawer: true,
+  logOut: () => {}
+};
 
 export default App;

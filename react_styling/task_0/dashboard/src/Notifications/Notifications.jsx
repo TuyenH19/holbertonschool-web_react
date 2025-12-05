@@ -1,30 +1,28 @@
-import React, { Component } from 'react';
-import closeIcon from '../assets/close-button.png';
+import React from 'react';
+import PropTypes from 'prop-types';
 import './Notifications.css';
 import NotificationItem from './NotificationItem';
 
-class Notifications extends Component {
-  static defaultProps = {
-    notifications: [],
-    displayDrawer: false
-  };
+class Notifications extends React.Component {
+  constructor(props) {
+    super(props);
+    this.markAsRead = this.markAsRead.bind(this);
+  }
 
-  shouldComponentUpdate(nextProps, nextState) {
+  shouldComponentUpdate(nextProps) {
     return nextProps.notifications.length !== this.props.notifications.length;
   }
 
-  markAsRead = (id) => {
+  markAsRead(id) {
     console.log(`Notification ${id} has been marked as read`);
-  };
+  }
 
   render() {
-    const { notifications, displayDrawer } = this.props;
+    const { displayDrawer, notifications } = this.props;
 
     return (
-      <>
-        <div className="menuItem">
-          <p>Your notifications</p>
-        </div>
+      <div className="NotificationsComponent">
+        <div className="notification-title">Your notifications</div>
         {displayDrawer && (
           <div className="Notifications">
             {notifications.length === 0 ? (
@@ -46,18 +44,30 @@ class Notifications extends Component {
                 </ul>
               </>
             )}
-            <button
-              aria-label="Close"
-              style={{ float: 'right' }}
-              onClick={() => console.log('Close button has been clicked')}
-            >
-              <img src={closeIcon} alt="close" style={{ height: 20, width: 20 }} />
-            </button>
           </div>
         )}
-      </>
+      </div>
     );
   }
 }
+
+Notifications.propTypes = {
+  displayDrawer: PropTypes.bool,
+  notifications: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      type: PropTypes.string,
+      value: PropTypes.string,
+      html: PropTypes.shape({
+        __html: PropTypes.string
+      })
+    })
+  )
+};
+
+Notifications.defaultProps = {
+  displayDrawer: false,
+  notifications: []
+};
 
 export default Notifications;
