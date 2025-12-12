@@ -81,21 +81,21 @@ export default function App() {
     setDisplayDrawer(false);
   }, []);
 
-  const logIn = (email, password) => {
+  const logIn = useCallback((email, password) => {
     setUser({
       email,
       password,
       isLoggedIn: true
     });
-  };
+  }, []);
 
-  const logOut = () => {
+  const logOut = useCallback(() => {
     setUser({
       email: '',
       password: '',
       isLoggedIn: false,
     });
-  };
+  }, []);
 
   const markNotificationAsRead = useCallback((id) => {
     setNotifications(prev =>
