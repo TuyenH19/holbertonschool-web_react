@@ -13,14 +13,15 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     login: (state, action) => {
-      state.user.email = action.payload.email;
-      state.user.password = action.payload.password;
+      state.user = action.payload;
       state.isLoggedIn = true;
     },
     logout: (state) => {
-      state.user.email = '';
-      state.user.password = '';
-      state.isLoggedIn = false;
+      state.user = {
+        email: '',
+        password: '',
+    };
+    state.isLoggedIn = false;
     },
   },
 });
