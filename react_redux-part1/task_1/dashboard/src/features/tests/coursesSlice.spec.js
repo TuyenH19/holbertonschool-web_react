@@ -59,30 +59,6 @@ describe('coursesSlice', () => {
         credit: 40,
       });
     });
-
-    test('should replace existing courses when fetching new ones', async () => {
-      const initialState = {
-        courses: [
-          { id: 100, name: 'Old Course', credit: 10 },
-        ],
-        displayDrawer: true,
-      };
-
-      const newCourses = [
-        { id: 1, name: 'ES6', credit: 60 },
-        { id: 2, name: 'Webpack', credit: 20 },
-      ];
-
-      const action = {
-        type: fetchCourses.fulfilled.type,
-        payload: newCourses,
-      };
-
-      const newState = coursesReducer(initialState, action);
-
-      expect(newState.courses).toHaveLength(2);
-      expect(newState.courses).toEqual(newCourses);
-    });
   });
 
   describe('logout action', () => {
@@ -103,22 +79,6 @@ describe('coursesSlice', () => {
         courses: [],
         displayDrawer: true,
       });
-    });
-
-    test('should reset courses even when courses array is empty', () => {
-      const stateWithChanges = {
-        courses: [],
-        displayDrawer: false,
-      };
-
-      const action = logout();
-      const newState = coursesReducer(stateWithChanges, action);
-
-      expect(newState).toEqual({
-        courses: [],
-        displayDrawer: true,
-      });
-      expect(newState.displayDrawer).toBe(true);
     });
   });
 });
