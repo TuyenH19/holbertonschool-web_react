@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { StyleSheet, css } from 'aphrodite';
 import Notifications from './components/Notifications/Notifications';
@@ -20,15 +20,17 @@ const styles = StyleSheet.create({
 export default function App() {
   const dispatch = useDispatch();
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+  const prevIsLoggedIn = useRef(false);
 
   useEffect(() => {
     dispatch(fetchNotifications());
   }, [dispatch]);
 
   useEffect(() => {
-    if (isLoggedIn) {
+    if (isLoggedIn && !prevIsLoggedIn.current) {
       dispatch(fetchCourses());
     }
+    prevIsLoggedIn.current = isLoggedIn;
   }, [isLoggedIn, dispatch]);
 
   return (
