@@ -1,4 +1,4 @@
-import { memo, useState } from "react";
+import { memo, useState, useRef } from "react";
 import { StyleSheet, css } from "aphrodite";
 import { useSelector, useDispatch } from "react-redux";
 import closeIcon from "../../assets/close-icon.png";
@@ -35,6 +35,8 @@ const styles = StyleSheet.create({
     width: "25%",
     float: "right",
     marginTop: "20px",
+    opacity: 0,
+    visibility: "hidden",
     "@media (max-width: 900px)": {
       position: "fixed",
       top: 0,
@@ -48,6 +50,10 @@ const styles = StyleSheet.create({
       backgroundColor: "white",
       zIndex: 1000,
     },
+  },
+  visible: {
+    opacity: 1,
+    visibility: "visible",
   },
   ul: {
     "@media (max-width: 900px)": {
@@ -89,15 +95,12 @@ const styles = StyleSheet.create({
 
 const Notifications = memo(function Notifications() {
   const dispatch = useDispatch();
-  const [displayDrawer, setDisplayDrawer] = useState(true);
+  const drawerRef = useRef(null);
+  const [isVisible, setIsVisible] = useState(true);
   const notifications = useSelector((state) => state.notifications.notifications);
 
-  const handleDisplayDrawer = () => {
-    setDisplayDrawer(true);
-  };
-
-  const handleHideDrawer = () => {
-    setDisplayDrawer(false);
+  const handleToggleDrawer = () => {
+    setIsVisible(!isVisible);
   };
 
   const handleMarkNotificationAsRead = (id) => {
@@ -108,42 +111,38 @@ const Notifications = memo(function Notifications() {
     <>
       <div
         className={css(styles.menuItem)}
-        onClick={() => handleDisplayDrawer()}
+        onClick={handleToggleDrawer}
       >
         Your notifications
       </div>
-      {displayDrawer ? (
-        <div className={css(styles.notificationItems)}>
-          {notifications.length > 0 ? (
-            <>
-              <p className={css(styles.p)}>Here is the list of notifications</p>
-              <button
-                onClick={() => handleHideDrawer()}
-                aria-label="Close"
-                className={css(styles.button)}
-              >
-                <img src={closeIcon} alt="close icon" />
-              </button>
-              <ul className={css(styles.ul)}>
-                {notifications.map((notification) => (
-                  <NotificationItem
-                    id={notification.id}
-                    key={notification.id}
-                    type={notification.type}
-                    value={notification.value}
-                    html={notification.html}
-                    markAsRead={handleMarkNotificationAsRead}
-                  />
-                ))}
-              </ul>
-            </>
-          ) : (
-            <p className={css(styles.p)}>No new notifications for now</p>
-          )}
-        </div>
-      ) : (
-        []
-      )}
+      <div className={css(styles.notificationItems, isVisible && styles.visible)} ref={drawerRef}>
+        {notifications.length > 0 ? (
+          <>
+            <p className={css(styles.p)}>Here is the list of notifications</p>
+            <button
+              onClick={handleToggleDrawer}
+              aria-label="Close"
+              className={css(styles.button)}
+            >
+              <img src={closeIcon} alt="close icon" />
+            </button>
+            <ul className={css(styles.ul)}>
+              {notifications.map((notification) => (
+                <NotificationItem
+                  id={notification.id}
+                  key={notification.id}
+                  type={notification.type}
+                  value={notification.value}
+                  html={notification.html}
+                  markAsRead={handleMarkNotificationAsRead}
+                />
+              ))}
+            </ul>
+          </>
+        ) : (
+          <p className={css(styles.p)}>No new notifications for now</p>
+        )}
+      </div>
     </>
   );
 });
