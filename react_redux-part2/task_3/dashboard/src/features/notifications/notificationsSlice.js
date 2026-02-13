@@ -25,9 +25,9 @@ export const fetchNotifications = createAsyncThunk(
       .filter((n) => !(n.context && n.context.isRead))
       .map((n) => ({
         id: n.id,
-        type: n.type,
+        type: n.context?.type || 'default',
         isRead: !!(n.context && n.context.isRead),
-        value: n.value || null,
+        value: n.context?.value || null,
       }));
 
     return unread;
